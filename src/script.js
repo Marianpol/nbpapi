@@ -3,6 +3,25 @@ let latestExchangeRates = 'http://api.nbp.pl/api/exchangerates/tables/A/?format=
 let mainTable = document.getElementById('main-table');
 let userTable = document.getElementById('user-table');
 
+const makeRequest = function (url){
+	const req = new XMLHttpRequest();
+	return new Promise(function(res, rej){
+		req.onreadystatechange = function(){
+			if(readyState !== 4) return;
+			if(req.status >= 200 && req.status < 300){
+				res(req);
+			}else{
+				rej({
+					status: req.status,
+					statusText: req.statusText,
+				})	
+			}
+		}
+		req.open('GET',url,flase);
+		req.send();
+	});
+}
+
 fetch(latestExchangeRates)
 	.then(response => {
 		return response.json();
